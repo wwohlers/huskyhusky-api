@@ -159,19 +159,22 @@ export class ArticlesService {
    * @param limit number of articles to retrieve
    */
   async getTopArticles(limit: number): Promise<Article[]> {
+    const allArticles = await this.articleModel
+      .find({ public: true })
+      .sort({ 'createdAt': -1 });
     const recentArticles = await this.articleModel
       .find({ public: true })
       .sort({ 'createdAt': -1 })
       .limit(limit * 2)
       .populate('author');
     for (const article of recentArticles) {
-      const now = Math.floor(Date.now() / 1000);
-      const ageInHours = Math.max(0.5, (now - article.createdAt) / (60 * 60));
-      const clicksPerHour = article.clicks / ageInHours;
-      article['relevance'] = Math.sqrt(clicksPerHour) / ageInHours;
+      // const now = Math.floor(Date.now() / 1000);
+      // const ageInHours = Math.max(0.5, (now - article.createdAt) / (60 * 60));
+      // const clicksPerHour = article.clicks / ageInHours;
+      // article['relevance'] = Math.sqrt(clicksPerHour) / ageInHours;
       this.secureUser(<User>article.author);
     }
-    return recentArticles.sort((a, b) => b['relevance'] - a['relevance']).slice(0, limit);
+    return recentArticles.sort((a, b) => b.createdAt - a.createdAt).slice(0, limit);
   }
 
   /**

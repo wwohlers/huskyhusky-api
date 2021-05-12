@@ -159,9 +159,6 @@ export class ArticlesService {
    * @param limit number of articles to retrieve
    */
   async getTopArticles(limit: number): Promise<Article[]> {
-    const allArticles = await this.articleModel
-      .find({ public: true })
-      .sort({ 'createdAt': -1 });
     const recentArticles = await this.articleModel
       .find({ public: true })
       .sort({ 'createdAt': -1 })

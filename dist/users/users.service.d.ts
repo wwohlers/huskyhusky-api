@@ -1,0 +1,32 @@
+import { Model } from 'mongoose';
+import { User } from './interfaces/user.interface';
+import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { SignInDto } from '../dto/sign-in.dto';
+import { SignInResponseDto } from '../dto/sign-in-response.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
+import { EmailService } from '../email/email.service';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
+export declare class UsersService {
+    private userModel;
+    private jwtService;
+    private emailService;
+    constructor(userModel: Model<User>, jwtService: JwtService, emailService: EmailService);
+    createUser(dto: CreateUserDto): Promise<User>;
+    signIn(dto: SignInDto): Promise<SignInResponseDto>;
+    signOut(reqUser: User, token: string): Promise<void>;
+    getUserByToken(token: string): Promise<User>;
+    updateUserPassword(reqUser: User, dto: UpdatePasswordDto): Promise<User>;
+    resetUserPassword(dto: ResetPasswordDto): Promise<User>;
+    getAllUsers(excludeRemoved: boolean): Promise<User[]>;
+    getUserById(reqUser: User): Promise<User>;
+    setAdmin(userId: string, boolValue: boolean): Promise<User>;
+    setEmail(reqUser: User, newEmail: string): Promise<User>;
+    setBio(reqUser: User, newBio: string): Promise<User>;
+    setRemoved(userId: string, boolValue: boolean): Promise<User>;
+    requestPasswordReset(email: string): Promise<void>;
+    private retrieveUserById;
+    private modifyUserProp;
+    private generateResetKey;
+    private secureUser;
+}
